@@ -36,16 +36,14 @@ ifeq ($(WALKIE_TALKIE_MODE), 1)
 endif
 
 # --- Dynamic Discovery ---
-# Recursively find all C source files in the project
-# Exclude current and hidden directories from the search if necessary
-SRCS := $(shell find . -name "*.c")
+# Recursively find all C source files in the project, excluding hidden directories
+SRCS := $(shell find . -name "*.c" -not -path "*/.*")
 
 # Generate the list of object files from the source files
 OBJS := $(SRCS:.c=.o) dstartup.o
 
-# Recursively find all directories to add as include paths
-# This ensures that headers in sub-directories are always found.
-INC_DIRS := $(shell find . -type d)
+# Recursively find all directories to add as include paths, excluding hidden ones (like .git)
+INC_DIRS := $(shell find . -type d -not -path "*/.*")
 INC_FLAGS := $(foreach dir, $(INC_DIRS), -I$(dir))
 
 # --- Compilation Flags ---
